@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5269743774066024578}
   - component: {fileID: 2664096237540780293}
   - component: {fileID: 8670849273892874433}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bullet
   m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4872802635741892516}
   - component: {fileID: 8602249124607454984}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 3348881300794119384}
   - component: {fileID: 7082794223509246450}
   - component: {fileID: 8006355431129532656}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}

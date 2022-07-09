@@ -10,17 +10,18 @@ public class IWeapon : MonoBehaviour
     public Player player;
     public LineRenderer lr;
     public Slider reloadBar;
+    public GameObject hitTarget;
 
     public float projectileForce;
     public int fireRate;
     public float timeSinceLastFire;
 
-    public int maxIterations = 10000;
     public int maxSegmentCount = 300;
-    public float segmentStepModulo = 10f;
+    public float segmentStepModulo = 1f;
 
     private Vector3[] segments;
     private int numSegments = 0;
+    public bool rayHit = false;
 
     public bool Enabled
     {
@@ -38,8 +39,8 @@ public class IWeapon : MonoBehaviour
     {
         float timestep = Time.fixedDeltaTime;
 
-        float stepDrag = 1 - timestep;
-        Vector3 velocity = firePoint.transform.forward / ((projectileForce / 5) * timestep);
+        Vector3 velocity = firePoint.transform.forward / (projectileForce * timestep);
+        Debug.Log(velocity);
         Vector3 gravity = Physics.gravity * timestep * timestep;
         Vector3 position = firePoint.transform.position;
 
@@ -51,18 +52,23 @@ public class IWeapon : MonoBehaviour
         segments[0] = position;
         numSegments = 1;
 
-        for (int i = 0; i < maxIterations && numSegments < maxSegmentCount && position.y > 0f; i++)
+        for (int i = 1; i < maxSegmentCount && position.y > 0f; i++)
         {
             velocity += gravity;
-            velocity *= stepDrag;
 
             position += velocity;
 
-            if (i % segmentStepModulo == 0)
+            segments[i] = position;
+            numSegments = i;
+
+            if (Physics.Raycast(firePoint.position, position - firePoint.position, Vector3.Distance(position, firePoint.position)))
             {
-                segments[numSegments] = position;
-                numSegments++;
+                rayHit = true;
+                break;
             }
+            else
+                if (rayHit == true)
+                    rayHit = false;
         }
 
         Draw();
@@ -77,6 +83,16 @@ public class IWeapon : MonoBehaviour
         {
             lr.SetPosition(i, segments[i]);
         }
+
+        if (rayHit == true && timeSinceLastFire >= fireRate)
+        {
+            if (hitTarget.activeSelf == false)
+                hitTarget.SetActive(true);
+            hitTarget.transform.position = segments[numSegments];
+        }
+        else
+            if (hitTarget.activeSelf == true)
+                hitTarget.SetActive(false);
     }
 
 }
