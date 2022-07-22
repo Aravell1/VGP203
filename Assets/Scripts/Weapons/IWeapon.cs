@@ -41,7 +41,7 @@ public class IWeapon : MonoBehaviour
 
         Vector3 velocity = firePoint.transform.forward / (projectileForce * timestep);
         Debug.Log(velocity);
-        Vector3 gravity = Physics.gravity * timestep * timestep;
+        Vector3 gravity = timestep * timestep * Physics.gravity;
         Vector3 position = firePoint.transform.position;
 
         if (segments == null || segments.Length != maxSegmentCount)
@@ -50,7 +50,7 @@ public class IWeapon : MonoBehaviour
         }
 
         segments[0] = position;
-        numSegments = 1;
+        numSegments++;
 
         for (int i = 1; i < maxSegmentCount && position.y > 0f; i++)
         {
@@ -59,10 +59,12 @@ public class IWeapon : MonoBehaviour
             position += velocity;
 
             segments[i] = position;
-            numSegments = i;
+            numSegments++;
 
-            if (Physics.Raycast(firePoint.position, position - firePoint.position, Vector3.Distance(position, firePoint.position)))
+            if (Physics.Raycast(segments[i - 1], position - segments[i - 1], out RaycastHit hit, Vector3.Distance(position, segments[i - 1])))
             {
+                segments[i + 1] = hit.point;
+                numSegments++;
                 rayHit = true;
                 break;
             }

@@ -35,6 +35,8 @@ public class Shotgun : IWeapon
 
         if (Enabled)
             SimulatePath();
+        else if (hitTarget.activeSelf == true)
+            hitTarget.SetActive(false);
 
         if (timeSinceLastFire < fireRate)
         {
